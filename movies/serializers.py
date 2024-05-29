@@ -17,7 +17,9 @@ class MovieSerializer(serializers.ModelSerializer):
         return round(duration)
 
 class StreamPlatformSerializer(serializers.ModelSerializer):
-    movies = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    movies = MovieSerializer(many=True, read_only=True)
     class Meta:
         model = StreamPlatform
         exclude = ('updated_at', 'created_at', )
+
+
