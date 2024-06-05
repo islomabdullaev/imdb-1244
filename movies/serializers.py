@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from movies.models import Movie, StreamPlatform
+from movies.models import Movie, MovieReview, StreamPlatform
 
 from django.utils import timezone
 
@@ -23,3 +23,8 @@ class StreamPlatformSerializer(serializers.ModelSerializer):
         exclude = ('updated_at', 'created_at', )
 
 
+class MoviewReviewSerializer(serializers.ModelSerializer):
+    rating = serializers.IntegerField()
+    class Meta:
+        model = MovieReview
+        exclude = ('updated_at', 'created_at', 'user')

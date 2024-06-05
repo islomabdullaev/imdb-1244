@@ -34,7 +34,7 @@ class Movie(BaseModel):
 
 class MovieReview(BaseModel):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(5)])
 
     def __str__(self) -> str:
