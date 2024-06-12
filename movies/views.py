@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # models
+from general.permissions import IsEmployeeOrReadOnly
 from movies.models import Movie, StreamPlatform
 
 # serializers
@@ -14,7 +15,7 @@ from movies.serializers import MovieSerializer, MoviewReviewSerializer, StreamPl
 # Create your views here.
 
 class MovieListAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsEmployeeOrReadOnly]
     def get(self, request):
         movies = Movie.objects.all()
         serializer = MovieSerializer(instance=movies, many=True)
@@ -46,7 +47,6 @@ class StreamPlatformListAPIView(APIView):
 
 class MovieReviewCreateAPIView(APIView):
     def post(self, request):
-        print(request.user)
         serializer = MoviewReviewSerializer(data=request.data)
         if serializer.is_valid():
             try:
