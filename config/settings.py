@@ -134,9 +134,18 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-        'general.permissions.IsEmployeeOrReadOnly'
-    ]
+        'rest_framework.permissions.AllowAny',
+        # 'general.permissions.IsEmployeeOrReadOnly'
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+        'general.throttling.MovieListThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '5/minute',
+        'user': '10/minute',
+    }
 
 }
 

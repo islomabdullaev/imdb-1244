@@ -4,9 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.throttling import AnonRateThrottle
 
 # models
 from general.permissions import IsEmployeeOrReadOnly
+from general.throttling import MovieListThrottle
 from movies.models import Movie, StreamPlatform
 
 # serializers
@@ -16,6 +18,7 @@ from movies.serializers import MovieSerializer, MoviewReviewSerializer, StreamPl
 
 class MovieListAPIView(APIView):
     permission_classes = [IsEmployeeOrReadOnly]
+    throttle_classes = [MovieListThrottle]
     def get(self, request):
         movies = Movie.objects.all()
         serializer = MovieSerializer(instance=movies, many=True)
