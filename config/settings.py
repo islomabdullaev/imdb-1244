@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # outer apps
     'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -134,18 +135,19 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
         # 'general.permissions.IsEmployeeOrReadOnly'
     ],
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
-        'general.throttling.MovieListThrottle',
+        # 'general.throttling.MovieListThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '5/minute',
         'user': '10/minute',
-    }
+    },
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 
 }
 

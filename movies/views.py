@@ -3,12 +3,13 @@ from django.db import IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
+from rest_framework.filters import SearchFilter
 
 # models
 from general.permissions import IsEmployeeOrReadOnly
-from general.throttling import MovieListThrottle
+# from general.throttling import MovieListThrottle
 from movies.models import Movie, StreamPlatform
 
 # serializers
@@ -17,10 +18,24 @@ from movies.serializers import MovieSerializer, MoviewReviewSerializer, StreamPl
 # Create your views here.
 
 class MovieListAPIView(APIView):
-    permission_classes = [IsEmployeeOrReadOnly]
-    throttle_classes = [MovieListThrottle]
+    permission_classes = [IsAuthenticated, IsEmployeeOrReadOnly]
+    search_fields = ['name']
+    filter_backends = [SearchFilter]
+    # throttle_classes = [MovieListThrottle]
     def get(self, request):
-        movies = Movie.objects.all()
+        search = request.GET.get('search')
+        sort = request.GET.get('sort')
+        movies = Movie.objects.filter(is_active=True)
+        order_by = "created_at"
+        if search:
+            movies = movies.filter(name__icontains=search)
+        if sort:
+            match sort:
+                case "asc":
+                    order_by = "-created_at"
+                case "desc":
+                    order_by = "created_at"
+        movies = movies.order_by(order_by)
         serializer = MovieSerializer(instance=movies, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
